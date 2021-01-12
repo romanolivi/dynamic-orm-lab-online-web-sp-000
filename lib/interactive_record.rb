@@ -21,7 +21,7 @@ class InteractiveRecord
         column_names.compact
       end
 
-    def intialize(options={})
+    def initialize(options={})
         options.each do |k, v|
             self.send("#{k}=", v)
         end
@@ -47,14 +47,18 @@ class InteractiveRecord
         values.join(", ")
     end
 
-    def column_names_fpr_insert
+    def col_names_for_insert
         self.class.column_names.delete_if {|column| column == "id"}.join(", ")
     end
 
     def save
-        DB[:conn].execute("INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (?)", [values_for_insert])
-       
+        sql = "INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (#{values_for_insert})"
+        DB[:conn].execute(sql)
         @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
     end 
 
+    def self.find_by(h)
+        sql = "SELECT * FROM #{self.table_name} WHERE #{h.keys[0].to_s} = '#{h.values[0].to_s}'"
+        DB[:conn].execute(sql)
+    end
 end
