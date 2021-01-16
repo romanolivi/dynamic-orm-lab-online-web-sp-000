@@ -21,7 +21,11 @@ class InteractiveRecord
         column_names.compact
       end
 
+<<<<<<< HEAD
     def initialize(options={})
+=======
+    def intialize(options={})
+>>>>>>> dc2aa2ab949d42616e062fcbbf58f75da7b076a8
         options.each do |k, v|
             self.send("#{k}=", v)
         end
@@ -47,11 +51,16 @@ class InteractiveRecord
         values.join(", ")
     end
 
+<<<<<<< HEAD
     def col_names_for_insert
+=======
+    def column_names_fpr_insert
+>>>>>>> dc2aa2ab949d42616e062fcbbf58f75da7b076a8
         self.class.column_names.delete_if {|column| column == "id"}.join(", ")
     end
 
     def save
+<<<<<<< HEAD
         sql = "INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (#{values_for_insert})"
         DB[:conn].execute(sql)
         @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
@@ -61,4 +70,10 @@ class InteractiveRecord
         sql = "SELECT * FROM #{self.table_name} WHERE #{h.keys[0].to_s} = '#{h.values[0].to_s}'"
         DB[:conn].execute(sql)
     end
+=======
+        DB[:conn].execute("INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (?)", [values_for_insert])
+       
+        @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
+    end 
+>>>>>>> dc2aa2ab949d42616e062fcbbf58f75da7b076a8
 end
